@@ -72,4 +72,4 @@ RUN cd gnupg-$GNUPG && ./configure --prefix=/usr/local && make -j && make instal
 RUN ldconfig
 
 WORKDIR /
-RUN tar cf gnupg.tar -C /usr/local bin
+RUN tar cf gnupg.tar /usr/local/bin
