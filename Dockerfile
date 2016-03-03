@@ -2,75 +2,45 @@
 
 FROM ubuntu:15.10
 
-ENV LIBGPG_ERROR 1.21
-ENV LIBGCRYPT 1.6.5
-ENV LIBKSBA 1.3.3
-ENV LIBASSUAN 2.4.2
-ENV NPTH 1.2
-ENV PINENTRY 0.9.7
-ENV GNUPG 2.1.11
-
+ENV DEBIAN_FRONTEND noninteractive
 RUN apt-get update
-RUN apt-get -y install \
-    build-essential \
-    bzip2 \
-    gettext \
-    gnutls-bin \
-    libbz2-dev \
-    libgnutls-dev \
-    libgnutls28-dev \
-    libncurses-dev \
-    libtinfo-dev \
-    make \
-    texinfo \
-    wget \
-    zlib1g-dev
+RUN apt-get -y install apt-utils
+RUN apt-get -y install bzip2
+RUN apt-get -y install wget
 
-RUN gpg --list-keys
-RUN gpg --keyserver pool.sks-keyservers.net --recv-keys \
-    0x4F25E3B6 \
-    0xE0856959 \
-    0x33BD3F06 \
-    0x7EFD60D9 \
-    0xF7E48EDB
+RUN gpg --keyserver pool.sks-keyservers.net --recv-keys 0x4F25E3B6
+RUN gpg --keyserver pool.sks-keyservers.net --recv-keys 0xE0856959
+RUN gpg --keyserver pool.sks-keyservers.net --recv-keys 0x33BD3F06
+RUN gpg --keyserver pool.sks-keyservers.net --recv-keys 0x7EFD60D9
 
-RUN mkdir -p /var/src/gnupg
-WORKDIR /var/src/gnupg
+WORKDIR /usr/local/src
 
-RUN wget -c https://www.gnupg.org/ftp/gcrypt/libgpg-error/libgpg-error-$LIBGPG_ERROR.tar.gz
-RUN wget -c https://www.gnupg.org/ftp/gcrypt/libgcrypt/libgcrypt-$LIBGCRYPT.tar.gz
-RUN wget -c https://www.gnupg.org/ftp/gcrypt/libksba/libksba-$LIBKSBA.tar.bz2
-RUN wget -c https://www.gnupg.org/ftp/gcrypt/libassuan/libassuan-$LIBASSUAN.tar.bz2
-RUN wget -c https://www.gnupg.org/ftp/gcrypt/npth/npth-$NPTH.tar.bz2
-RUN wget -c https://www.gnupg.org/ftp/gcrypt/pinentry/pinentry-$PINENTRY.tar.bz2
+ENV GNUPG 2.1.11
 RUN wget -c https://www.gnupg.org/ftp/gcrypt/gnupg/gnupg-$GNUPG.tar.bz2
-
-RUN wget -c https://www.gnupg.org/ftp/gcrypt/libgpg-error/libgpg-error-$LIBGPG_ERROR.tar.gz.sig
-RUN wget -c https://www.gnupg.org/ftp/gcrypt/libgcrypt/libgcrypt-$LIBGCRYPT.tar.gz.sig
-RUN wget -c https://www.gnupg.org/ftp/gcrypt/libksba/libksba-$LIBKSBA.tar.bz2.sig
-RUN wget -c https://www.gnupg.org/ftp/gcrypt/libassuan/libassuan-$LIBASSUAN.tar.bz2.sig
-RUN wget -c https://www.gnupg.org/ftp/gcrypt/npth/npth-$NPTH.tar.bz2.sig
-RUN wget -c https://www.gnupg.org/ftp/gcrypt/pinentry/pinentry-$PINENTRY.tar.bz2.sig
 RUN wget -c https://www.gnupg.org/ftp/gcrypt/gnupg/gnupg-$GNUPG.tar.bz2.sig
+RUN gpg --verify gnupg-$GNUPG.tar.bz2.sig
+RUN tar xf gnupg-$GNUPG.tar.bz2
 
-RUN gpg --verify libgpg-error-$LIBGPG_ERROR.tar.gz.sig && tar -xzf libgpg-error-$LIBGPG_ERROR.tar.gz
-RUN gpg --verify libgcrypt-$LIBGCRYPT.tar.gz.sig && tar -xzf libgcrypt-$LIBGCRYPT.tar.gz
-RUN gpg --verify libksba-$LIBKSBA.tar.bz2.sig && tar -xjf libksba-$LIBKSBA.tar.bz2
-RUN gpg --verify libassuan-$LIBASSUAN.tar.bz2.sig && tar -xjf libassuan-$LIBASSUAN.tar.bz2
-RUN gpg --verify npth-$NPTH.tar.bz2.sig && tar -xjf npth-$NPTH.tar.bz2
-RUN gpg --verify pinentry-$PINENTRY.tar.bz2.sig && tar -xjf pinentry-$PINENTRY.tar.bz2
-RUN gpg --verify gnupg-$GNUPG.tar.bz2.sig && tar -xjf gnupg-$GNUPG.tar.bz2
+RUN apt-get -y install build-essential
+RUN apt-get -y install file
+RUN apt-get -y install gettext
+RUN apt-get -y install libbz2-dev
+RUN apt-get -y install libcurl4-gnutls-dev
+RUN apt-get -y install libgnutls-dev
+RUN apt-get -y install libgtk2.0-dev
+RUN apt-get -y install libldap-dev
+RUN apt-get -y install libncurses-dev
+RUN apt-get -y install libreadline-dev
+RUN apt-get -y install libsqlite3-dev
+RUN apt-get -y install libtinfo-dev
+RUN apt-get -y install libusb-dev
+RUN apt-get -y install pkg-config
+RUN apt-get -y install sqlite3
+RUN apt-get -y install texinfo
+RUN apt-get -y install zlib1g-dev
 
-RUN cd libgpg-error-$LIBGPG_ERROR/ && ./configure --prefix=/usr/local && make -j && make install
-RUN cd libgcrypt-$LIBGCRYPT && ./configure --prefix=/usr/local && make -j && make install
-RUN cd libksba-$LIBKSBA && ./configure --prefix=/usr/local && make -j && make install
-RUN cd libassuan-$LIBASSUAN && ./configure --prefix=/usr/local && make -j && make install
-RUN cd npth-$NPTH && ./configure --prefix=/usr/local && make -j && make install
-RUN cd pinentry-$PINENTRY && ./configure --prefix=/usr/local --enable-pinentry-curses && make -j && make install
-RUN cd gnupg-$GNUPG && ./configure --prefix=/usr/local && make -j && make install
-
-WORKDIR /usr/local/bin
-RUN ln -sf gpg2 gpg
-
+WORKDIR gnupg-$GNUPG
+RUN make -f build-aux/speedo.mk native-gui INSTALL_PREFIX=/usr/local
+    
 WORKDIR /
-RUN tar cf gnupg.tar /usr/local
+RUN tar cf gnupg.tar --exclude=src /usr/local
