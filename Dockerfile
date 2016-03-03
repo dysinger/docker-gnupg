@@ -61,9 +61,6 @@ RUN gpg --verify npth-$NPTH.tar.bz2.sig && tar -xjf npth-$NPTH.tar.bz2
 RUN gpg --verify pinentry-$PINENTRY.tar.bz2.sig && tar -xjf pinentry-$PINENTRY.tar.bz2
 RUN gpg --verify gnupg-$GNUPG.tar.bz2.sig && tar -xjf gnupg-$GNUPG.tar.bz2
 
-ENV CFLAGS -static
-ENV LDFLAGS -static
-
 RUN cd libgpg-error-$LIBGPG_ERROR/ && ./configure --prefix=/usr/local && make -j && make install
 RUN cd libgcrypt-$LIBGCRYPT && ./configure --prefix=/usr/local && make -j && make install
 RUN cd libksba-$LIBKSBA && ./configure --prefix=/usr/local && make -j && make install
@@ -76,4 +73,4 @@ WORKDIR /usr/local/bin
 RUN ln -sf gpg2 gpg
 
 WORKDIR /
-RUN tar cf gnupg.tar -C /usr/local ./bin ./sbin ./libexec ./share/gnupg ./share/man
+RUN tar cf gnupg.tar /usr/local
