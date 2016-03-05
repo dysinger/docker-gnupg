@@ -21,6 +21,12 @@ RUN wget -c https://www.gnupg.org/ftp/gcrypt/gnupg/gnupg-$GNUPG.tar.bz2.sig
 RUN gpg --verify gnupg-$GNUPG.tar.bz2.sig
 RUN tar xf gnupg-$GNUPG.tar.bz2
 
+ENV PINENTRY 0.9.7
+RUN wget -c https://www.gnupg.org/ftp/gcrypt/pinentry/pinentry-$PINENTRY.tar.bz2
+RUN wget -c https://www.gnupg.org/ftp/gcrypt/pinentry/pinentry-$PINENTRY.tar.bz2.sig
+RUN gpg --verify pinentry-$PINENTRY.tar.bz2.sig
+RUN tar xf pinentry-$PINENTRY.tar.bz2
+
 RUN apt-get -y install build-essential
 RUN apt-get -y install file
 RUN apt-get -y install gettext
@@ -40,5 +46,11 @@ RUN apt-get -y install zlib1g-dev
 
 WORKDIR gnupg-$GNUPG
 RUN make -f build-aux/speedo.mk native INSTALL_PREFIX=/usr/local
+
+WORKDIR /usr/local/src/pinentry-$PINENTRY
+RUN ./configure --prefix=/usr/local --enable-pinentry-curses
+RUN make install
+
 RUN ldconfig
+
 WORKDIR /
