@@ -38,6 +38,6 @@ RUN apt-get -y install texinfo
 RUN apt-get -y install zlib1g-dev
 
 WORKDIR gnupg-$GNUPG
-    
 RUN make -f build-aux/speedo.mk native INSTALL_PREFIX=/usr/local
+RUN ldconfig
 WORKDIR /
