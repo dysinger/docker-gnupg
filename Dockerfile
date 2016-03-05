@@ -45,6 +45,7 @@ RUN apt-get -y install texinfo
 RUN apt-get -y install zlib1g-dev
 
 WORKDIR /usr/local/src/gnupg-$GNUPG
+RUN perl -p -i -e 's/disable-g13/enable-g13/g' build-aux/speedo.mk
 RUN make -f build-aux/speedo.mk native INSTALL_PREFIX=/usr/local
 
 WORKDIR /usr/local/src/pinentry-$PINENTRY
