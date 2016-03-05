@@ -43,4 +43,3 @@ WORKDIR gnupg-$GNUPG
 RUN make -f build-aux/speedo.mk native-gui INSTALL_PREFIX=/usr/local
     
 WORKDIR /
-RUN tar cf gnupg.tar --exclude=src /usr/local
