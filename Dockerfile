@@ -29,28 +29,25 @@ RUN gpg --keyserver pool.sks-keyservers.net --recv-keys 0xE0856959
 RUN gpg --keyserver pool.sks-keyservers.net --recv-keys 0x33BD3F06
 RUN gpg --keyserver pool.sks-keyservers.net --recv-keys 0x7EFD60D9
 
-WORKDIR /usr/local/src
-
 ENV GNUPG 2.1.11
+WORKDIR /usr/local/src
 RUN wget -c https://www.gnupg.org/ftp/gcrypt/gnupg/gnupg-$GNUPG.tar.bz2
 RUN wget -c https://www.gnupg.org/ftp/gcrypt/gnupg/gnupg-$GNUPG.tar.bz2.sig
 RUN gpg --verify gnupg-$GNUPG.tar.bz2.sig
 RUN tar xf gnupg-$GNUPG.tar.bz2
+WORKDIR gnupg-$GNUPG
+RUN perl -p -i -e 's/disable-g13/enable-g13/g' build-aux/speedo.mk
+RUN make -f build-aux/speedo.mk native INSTALL_PREFIX=/usr/local
 
 ENV PINENTRY 0.9.7
+WORKDIR /usr/local/src
 RUN wget -c https://www.gnupg.org/ftp/gcrypt/pinentry/pinentry-$PINENTRY.tar.bz2
 RUN wget -c https://www.gnupg.org/ftp/gcrypt/pinentry/pinentry-$PINENTRY.tar.bz2.sig
 RUN gpg --verify pinentry-$PINENTRY.tar.bz2.sig
 RUN tar xf pinentry-$PINENTRY.tar.bz2
-
-WORKDIR /usr/local/src/gnupg-$GNUPG
-RUN perl -p -i -e 's/disable-g13/enable-g13/g' build-aux/speedo.mk
-RUN make -f build-aux/speedo.mk native INSTALL_PREFIX=/usr/local
-
-WORKDIR /usr/local/src/pinentry-$PINENTRY
+WORKDIR pinentry-$PINENTRY
 RUN ./configure --prefix=/usr/local --enable-pinentry-curses
 RUN make install
 
-RUN ldconfig
-
 WORKDIR /
+RUN ldconfig
