@@ -5,8 +5,24 @@ FROM ubuntu:16.04
 ENV DEBIAN_FRONTEND noninteractive
 RUN apt-get update
 RUN apt-get -y install apt-utils
+RUN apt-get -y install build-essential
 RUN apt-get -y install bzip2
+RUN apt-get -y install file
+RUN apt-get -y install gettext
+RUN apt-get -y install libbz2-dev
+RUN apt-get -y install libcurl4-gnutls-dev
+RUN apt-get -y install libgnutls-dev
+RUN apt-get -y install libldap2-dev
+RUN apt-get -y install libncurses-dev
+RUN apt-get -y install libreadline-dev
+RUN apt-get -y install libsqlite3-dev
+RUN apt-get -y install libtinfo-dev
+RUN apt-get -y install libusb-dev
+RUN apt-get -y install pkg-config
+RUN apt-get -y install sqlite3
+RUN apt-get -y install texinfo
 RUN apt-get -y install wget
+RUN apt-get -y install zlib1g-dev
 
 RUN gpg --keyserver pool.sks-keyservers.net --recv-keys 0x4F25E3B6
 RUN gpg --keyserver pool.sks-keyservers.net --recv-keys 0xE0856959
@@ -26,23 +42,6 @@ RUN wget -c https://www.gnupg.org/ftp/gcrypt/pinentry/pinentry-$PINENTRY.tar.bz2
 RUN wget -c https://www.gnupg.org/ftp/gcrypt/pinentry/pinentry-$PINENTRY.tar.bz2.sig
 RUN gpg --verify pinentry-$PINENTRY.tar.bz2.sig
 RUN tar xf pinentry-$PINENTRY.tar.bz2
-
-RUN apt-get -y install build-essential
-RUN apt-get -y install file
-RUN apt-get -y install gettext
-RUN apt-get -y install libbz2-dev
-RUN apt-get -y install libcurl4-gnutls-dev
-RUN apt-get -y install libgnutls-dev
-RUN apt-get -y install libldap2-dev
-RUN apt-get -y install libncurses-dev
-RUN apt-get -y install libreadline-dev
-RUN apt-get -y install libsqlite3-dev
-RUN apt-get -y install libtinfo-dev
-RUN apt-get -y install libusb-dev
-RUN apt-get -y install pkg-config
-RUN apt-get -y install sqlite3
-RUN apt-get -y install texinfo
-RUN apt-get -y install zlib1g-dev
 
 WORKDIR /usr/local/src/gnupg-$GNUPG
 RUN perl -p -i -e 's/disable-g13/enable-g13/g' build-aux/speedo.mk
