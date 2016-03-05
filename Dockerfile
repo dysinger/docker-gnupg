@@ -1,6 +1,6 @@
 #-*- mode: conf -*-
 
-FROM ubuntu:15.10
+FROM ubuntu:16.04
 
 ENV DEBIAN_FRONTEND noninteractive
 RUN apt-get update
