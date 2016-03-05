@@ -44,7 +44,7 @@ RUN apt-get -y install sqlite3
 RUN apt-get -y install texinfo
 RUN apt-get -y install zlib1g-dev
 
-WORKDIR gnupg-$GNUPG
+WORKDIR /usr/local/src/gnupg-$GNUPG
 RUN make -f build-aux/speedo.mk native INSTALL_PREFIX=/usr/local
 
 WORKDIR /usr/local/src/pinentry-$PINENTRY
