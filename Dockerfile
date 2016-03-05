@@ -27,7 +27,6 @@ RUN apt-get -y install gettext
 RUN apt-get -y install libbz2-dev
 RUN apt-get -y install libcurl4-gnutls-dev
 RUN apt-get -y install libgnutls-dev
-RUN apt-get -y install libgtk2.0-dev
 RUN apt-get -y install libldap-dev
 RUN apt-get -y install libncurses-dev
 RUN apt-get -y install libreadline-dev
@@ -40,6 +39,6 @@ RUN apt-get -y install texinfo
 RUN apt-get -y install zlib1g-dev
 
 WORKDIR gnupg-$GNUPG
-RUN make -f build-aux/speedo.mk native-gui INSTALL_PREFIX=/usr/local
     
+RUN make -f build-aux/speedo.mk native INSTALL_PREFIX=/usr/local
 WORKDIR /
