@@ -27,6 +27,7 @@ RUN apt-get -y install gettext
 RUN apt-get -y install libbz2-dev
 RUN apt-get -y install libcurl4-gnutls-dev
 RUN apt-get -y install libgnutls-dev
+RUN apt-get -y install libldap2-dev
 RUN apt-get -y install libncurses-dev
 RUN apt-get -y install libreadline-dev
 RUN apt-get -y install libsqlite3-dev
